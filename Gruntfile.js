@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     banner: '/*!\n' +
             ' * Bootstrap v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
             ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-            ' * Licensed under <%= _.pluck(pkg.licenses, "type") %> (<%= _.pluck(pkg.licenses, "url") %>)\n' +
+            ' * Licensed under <%= pkg.license.type %> (<%= pkg.license.url %>)\n' +
             ' */\n',
     jqueryCheck: 'if (typeof jQuery === \'undefined\') { throw new Error(\'Bootstrap\\\'s JavaScript requires jQuery\') }\n\n',
 
@@ -44,7 +44,10 @@ module.exports = function (grunt) {
         jshintrc: 'js/.jshintrc'
       },
       grunt: {
-        src: ['Gruntfile.js', 'docs/grunt/*.js', 'test-infra/shrinkwrap.js']
+        options: {
+          jshintrc: 'grunt/.jshintrc'
+        },
+        src: ['Gruntfile.js', 'grunt/*.js']
       },
       src: {
         src: 'js/*.js'
@@ -62,7 +65,7 @@ module.exports = function (grunt) {
         config: 'js/.jscs.json',
       },
       grunt: {
-        src: ['Gruntfile.js', 'docs/grunt/*.js', 'test-infra/shrinkwrap.js']
+        src: ['Gruntfile.js', 'grunt/*.js']
       },
       src: {
         src: 'js/*.js'
@@ -128,7 +131,7 @@ module.exports = function (grunt) {
         },
         src: [
           'docs/assets/js/vendor/less.min.js',
-          'docs/assets/js/vendor/jszip.js',
+          'docs/assets/js/vendor/jszip.min.js',
           'docs/assets/js/vendor/uglify.min.js',
           'docs/assets/js/vendor/blob.js',
           'docs/assets/js/vendor/filesaver.js',
@@ -192,7 +195,7 @@ module.exports = function (grunt) {
           keepSpecialComments: '*',
           noAdvanced: true, // turn advanced optimizations off until the issue is fixed in clean-css
           report: 'min',
-          selectorsMergeMode: 'ie8'
+          compatibility: 'ie8'
         },
         src: [
           'docs/assets/css/docs.css',
@@ -230,10 +233,10 @@ module.exports = function (grunt) {
         }
       },
       examples: {
-          expand: true,
-          cwd: 'docs/examples/',
-          src: ['**/*.css'],
-          dest: 'docs/examples/'
+        expand: true,
+        cwd: 'docs/examples/',
+        src: ['**/*.css'],
+        dest: 'docs/examples/'
       }
     },
 
@@ -259,7 +262,7 @@ module.exports = function (grunt) {
       options: {
         inject: 'js/tests/unit/phantom.js'
       },
-      files: 'js/tests/*.html'
+      files: 'js/tests/index.html'
     },
 
     connect: {
@@ -287,8 +290,8 @@ module.exports = function (grunt) {
           }
         },
         files: {
-          'docs/_includes/customizer-variables.html': 'docs/customizer-variables.jade',
-          'docs/_includes/nav-customize.html': 'docs/customizer-nav.jade'
+          'docs/_includes/customizer-variables.html': 'docs/jade/customizer-variables.jade',
+          'docs/_includes/nav-customize.html': 'docs/jade/customizer-nav.jade'
         }
       }
     },
@@ -359,7 +362,6 @@ module.exports = function (grunt) {
 
   // These plugins provide necessary tasks.
   require('load-grunt-tasks')(grunt, {scope: 'devDependencies'});
-  grunt.loadNpmTasks('browserstack-runner');
 
   // Docs HTML validation task
   grunt.registerTask('validate-html', ['jekyll', 'validation']);
@@ -380,12 +382,6 @@ module.exports = function (grunt) {
       (!process.env.TWBS_TEST || process.env.TWBS_TEST === 'sauce-js-unit')) {
     testSubtasks.push('connect');
     testSubtasks.push('saucelabs-qunit');
-  }
-  // Only run BrowserStack tests if there's a BrowserStack access key
-  if (typeof process.env.BROWSERSTACK_KEY !== 'undefined' &&
-      // Skip BrowserStack if running a different subset of the test suite
-      (!process.env.TWBS_TEST || process.env.TWBS_TEST === 'browserstack-js-unit')) {
-    testSubtasks.push('browserstack_runner');
   }
   grunt.registerTask('test', testSubtasks);
 

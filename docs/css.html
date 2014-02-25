@@ -46,10 +46,16 @@ lead: "Global CSS settings, fundamental HTML elements styled and enhanced with e
   <p>For improved cross-browser rendering, we use <a href="http://necolas.github.io/normalize.css/" target="_blank">Normalize.css</a>, a project by <a href="http://twitter.com/necolas" target="_blank">Nicolas Gallagher</a> and <a href="http://twitter.com/jon_neal" target="_blank">Jonathan Neal</a>.</p>
 
   <h3 id="overview-container">Containers</h3>
-  <p>Easily center a page's contents by wrapping its contents in a <code>.container</code>. Containers set <code>width</code> at various media query breakpoints to match our grid system.</p>
-  <p>Note that, due to <code>padding</code> and fixed widths, containers are not nestable by default.</p>
+  <p>Bootstrap requires a containing element to wrap site contents and house our grid system. You may choose one of two containers to use in your projects. Note that, due to <code>padding</code> and more, neither container is nestable.</p>
+  <p>Use <code>.container</code> for a responsive fixed width container.</p>
 {% highlight html %}
 <div class="container">
+  ...
+</div>
+{% endhighlight %}
+  <p>Use <code>.container-fluid</code> for a full width container, spanning the entire width of your viewport.</p>
+{% highlight html %}
+<div class="container-fluid">
   ...
 </div>
 {% endhighlight %}
@@ -73,13 +79,9 @@ lead: "Global CSS settings, fundamental HTML elements styled and enhanced with e
     <li>Predefined grid classes like <code>.row</code> and <code>.col-xs-4</code> are available for quickly making grid layouts. Less mixins can also be used for more semantic layouts.</li>
     <li>Columns create gutters (gaps between column content) via <code>padding</code>. That padding is offset in rows for the first and last column via negative margin on <code>.row</code>s.</li>
     <li>Grid columns are created by specifying the number of twelve available columns you wish to span. For example, three equal columns would use three <code>.col-xs-4</code>.</li>
+    <li>Grid classes apply to devices with screen widths greater than or equal to the breakpoint sizes, and override grid classes targeted at smaller devices. Therefore, applying any <code>.col-md-</code> class to an element will not only affect its styling on medium devices but also on large devices if a <code>.col-lg-</code> class is not present.</li>
   </ul>
   <p>Look to the examples for applying these principles to your code.</p>
-
-  <div class="bs-callout bs-callout-info">
-    <h4>Grids and full-width layouts</h4>
-    <p>Folks looking to create fully fluid layouts (meaning your site stretches the entire width of the viewport) must wrap their grid content in a containing element with <code>padding: 0 15px;</code> to offset the <code>margin: 0 -15px;</code> used on <code>.row</code>s.</p>
-  </div>
 
   <h3 id="grid-media-queries">Media queries</h3>
   <p>We use the following media queries in our Less files to create the key breakpoints in our grid system.</p>
@@ -156,9 +158,9 @@ lead: "Global CSS settings, fundamental HTML elements styled and enhanced with e
         <tr>
           <th>Column width</th>
           <td class="text-muted">Auto</td>
-          <td>60px</td>
-          <td>78px</td>
-          <td>95px</td>
+          <td>~62px</td>
+          <td>~81px</td>
+          <td>~97px</td>
         </tr>
         <tr>
           <th>Gutter width</th>
@@ -179,7 +181,6 @@ lead: "Global CSS settings, fundamental HTML elements styled and enhanced with e
       </tbody>
     </table>
   </div>
-  <p>Grid classes apply to devices with screen widths greater than or equal to the breakpoint sizes, and override grid classes targeted at smaller devices. Therefore, applying any <code>.col-md-</code> class to an element will not only affect its styling on medium devices but also on large devices if a <code>.col-lg-</code> class is not present.</p>
 
   <h3 id="grid-example-basic">Example: Stacked-to-horizontal</h3>
   <p>Using a single set of <code>.col-md-*</code> grid classes, you can create a basic grid system that starts out stacked on mobile devices and tablet devices (the extra small to small range) before becoming horizontal on desktop (medium) devices. Place grid columns in any <code>.row</code>.</p>
@@ -1891,8 +1892,8 @@ For example, <code>&lt;section&gt;</code> should be wrapped as inline.
   <p>Add the <code>disabled</code> attribute to a <code>&lt;fieldset&gt;</code> to disable all the controls within the <code>&lt;fieldset&gt;</code> at once.</p>
 
   <div class="bs-callout bs-callout-warning">
-    <h4>Link functionality of <code>&lt;a&gt;</code> not impacted</h4>
-    <p>This class will only change the appearance of <code>&lt;a class="btn btn-default"&gt;</code> buttons, not their functionality. Use custom JavaScript to disable links here.</p>
+    <h4>Caveat about link functionality of <code>&lt;a&gt;</code></h4>
+    <p>Our styles use <code>pointer-events: none</code> to try to disable the link functionality of <code>&lt;a class="btn btn-*"&gt;</code> buttons in this case, but that CSS property is not yet standardized and isn't fully supported in Opera 18 and below, or in Internet Explorer 11. So to be safe, use custom JavaScript to disable such links.</p>
   </div>
 
   <div class="bs-callout bs-callout-danger">
@@ -1981,7 +1982,11 @@ For example, <code>&lt;section&gt;</code> should be wrapped as inline.
 {% endhighlight %}
 
   <h3>With optional icons</h3>
-  <p>You can also add optional feedback icons with the addition of an extra class and the right icon.</p>
+  <p>You can also add optional feedback icons with the addition of <code>.has-feedback</code> and the right icon.</p>
+  <div class="bs-callout bs-callout-warning">
+    <h4>Icons and input groups</h4>
+    <p>When using the feedback icons, be aware that manual positioning may be required for <a href="../components#input-groups">input groups</a> with an add-on on the right. Adjust the <code>right: 0;</code> to an appropriate pixel value depending on the width of your addon.</p>
+  </div>
   <div class="bs-example">
     <form role="form">
       <div class="form-group has-success has-feedback">
@@ -2293,8 +2298,8 @@ For example, <code>&lt;section&gt;</code> should be wrapped as inline.
     We use <code>.disabled</code> as a utility class here, similar to the common <code>.active</code> class, so no prefix is required.
   </p>
   <div class="bs-callout bs-callout-warning">
-    <h4>Link functionality not impacted</h4>
-    <p>This class will only change the <code>&lt;a&gt;</code>'s appearance, not its functionality. Use custom JavaScript to disable links here.</p>
+    <h4>Link functionality caveat</h4>
+    <p>This class uses <code>pointer-events: none</code> to try to disable the link functionality of <code>&lt;a&gt;</code>s, but that CSS property is not yet standardized and isn't fully supported in Opera 18 and below, or in Internet Explorer 11. So to be safe, use custom JavaScript to disable such links.</p>
   </div>
   <div class="bs-callout bs-callout-warning">
     <h4>Context-specific usage</h4>
@@ -3245,7 +3250,7 @@ a {
   <p>Easily truncate text with an ellipsis with a single mixin. <strong>Requires element to be <code>block</code> or <code>inline-block</code> level.</strong></p>
 {% highlight scss %}
 // Mixin
-.text-truncate() {
+.text-overflow() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3255,7 +3260,7 @@ a {
 .branch-name {
   display: inline-block;
   max-width: 200px;
-  .text-truncate();
+  .text-overflow();
 }
 {% endhighlight %}
 
