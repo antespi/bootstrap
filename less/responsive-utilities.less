@@ -24,6 +24,7 @@
 
 // Visibility utilities
 .visible-xs,
+.visible-hs,
 .visible-sm,
 .visible-md,
 .visible-lg {
@@ -36,8 +37,6 @@
   }
 }
 .visible-hs {
-  .responsive-invisibility();
-
   @media (min-width: @screen-hs-min) and (max-width: @screen-hs-max) {
     .responsive-visibility();
   }
